@@ -1,0 +1,11 @@
+fiza-routeros-service/
+├── src/
+│   ├── config/         # Koneksi DB & MikroTik base config
+│   ├── controllers/    # Logika request-response API
+│   ├── services/       # Jantung sistem (MikrotikService Class)
+│   ├── routes/         # Definisi endpoint API
+│   ├── utils/          # Helper (Generator string, Logger)
+│   └── app.js          # Entry point aplikasi
+├── .env                # File rahasia (DB_PASS, dll)
+├── .gitignore          # File yang tidak boleh masuk Github
+└── package.json
