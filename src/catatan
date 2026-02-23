@@ -1,11 +1,91 @@
-fiza-routeros-service/
-├── src/
-│   ├── config/         # Koneksi DB & MikroTik base config
-│   ├── controllers/    # Logika request-response API
-│   ├── services/       # Jantung sistem (MikrotikService Class)
-│   ├── routes/         # Definisi endpoint API
-│   ├── utils/          # Helper (Generator string, Logger)
-│   └── app.js          # Entry point aplikasi
-├── .env                # File rahasia (DB_PASS, dll)
-├── .gitignore          # File yang tidak boleh masuk Github
-└── package.json
+============================================================
+📑 TECHNICAL DOCUMENTATION: FIZA ROUTEROS SERVICE
+
+Version: 1.0.0 | Author: Fiza Dev Team
+
+STRUKTUR PROYEK (MODULAR ARCHITECTURE)
+
+Sistem ini menggunakan pendekatan modular untuk memisahkan setiap
+fungsi MikroTik ke dalam service yang spesifik guna meningkatkan
+keterbacaan kode dan kemudahan pemeliharaan.
+
+📁 Root Directory:
+
+.env             : Menyimpan variabel lingkungan sensitif.
+
+.gitignore       : Daftar file yang diabaikan oleh Git.
+
+package.json     : Manifes proyek dan daftar dependensi Node.js.
+
+📁 src/ (Source Code):
+
+config/
+
+db.js          : Konfigurasi koneksi MySQL (MAMP).
+
+app.js           : Entry point utama aplikasi Express.js.
+
+routes/
+
+routerRoutes.js: Definisi dan pengaturan semua endpoint API.
+
+services/mikrotik/
+
+BaseService.js     : Kelas induk koneksi API MikroTik.
+
+InterfaceService.js: Manajemen Port, Bridge, dan VLAN.
+
+IpService.js       : Manajemen IP, DHCP, dan DNS.
+
+RouteService.js    : Gateway dan Recursive Failover.
+
+FirewallService.js : NAT dan Filter Rules.
+
+SystemService.js   : Monitoring Resource dan NTP.
+
+PANDUAN API (ENDPOINTS)
+
+Base URL: http://localhost:3000/api/router
+
+A. Monitoring (GET):
+
+GET /:id/resource     : Cek CPU, RAM, Uptime, dan Versi.
+
+GET /:id/interfaces   : List port fisik dan virtual.
+
+GET /:id/ip-address   : List alamat IP terpasang.
+
+B. Konfigurasi (POST):
+
+POST /system/init
+Payload: {"id": 1, "identity": "ROUTER-PUSAT"}
+
+POST /ip-address/add
+Payload: {"id": 1, "address": "192.168.1.1/24", "interfaceName": "ether1"}
+
+POST /firewall/masquerade
+Payload: {"id": 1, "outInterface": "ether1"}
+
+POST /interface/status
+Payload: {"id": 1, "name": "ether2", "active": true}
+
+ALUR KERJA GIT (SOP)
+
+Stage Changes : git add .
+
+Commit        : git commit -m "Pesan Deskriptif"
+
+Push          : git push origin main
+
+🛠️ REQUIREMENTS & TECH STACK
+
+Runtime          : Node.js v16+
+
+Framework        : Express.js
+
+Database         : MySQL (MAMP)
+
+MikroTik Library : node-routeros / ros-api
+
+============================================================
+COPYRIGHT (C) 2026 FIZA DEV

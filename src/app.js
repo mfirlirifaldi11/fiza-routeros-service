@@ -1,24 +1,33 @@
+require('dotenv').config();
 const express = require('express');
-const db = require('./config/db');
-const MikrotikService = require('./services/MikrotikService');
+const routerRoutes = require('./routes/routerRoutes');
 
 const app = express();
+
+// Middleware
 app.use(express.json());
 
-app.post('/api/provision', async (req, res) => {
-    const { routerId } = req.body;
-    try {
-        const [rows] = await db.execute('SELECT * FROM routers WHERE id = ?', [routerId]);
-        if (rows.length === 0) return res.status(404).json({ message: "Router not found" });
+// Load Modular Routes
+app.use('/api/router', routerRoutes);
 
-        const mt = new MikrotikService(rows[0]);
-        const result = await mt.setupInitial(rows[0].alias_name);
-        
-        res.json(result);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+// Root Endpoint
+app.get('/', (req, res) => {
+    res.json({
+        message: "Fiza MikroTik API Gateway Service",
+        version: "1.0.0",
+        author: "Gemini AI Assistant"
+    });
 });
 
+// Server Listener
 const PORT = process.env.APP_PORT || 3000;
-app.listen(PORT, () => console.log(`🚀 Fiza-RouterOS Service on port ${PORT}`));
+app.listen(PORT, () => {
+    console.log(`
+    ===============================================
+    🚀 FIZA SERVICE IS LIVE!
+    📍 URL      : http://localhost:${PORT}
+    📡 DB       : MySQL MAMP Port ${process.env.DB_PORT || 8889}
+    🛠️ Modules  : Interface, IP, Route, Firewall, System
+    ===============================================
+    `);
+});
