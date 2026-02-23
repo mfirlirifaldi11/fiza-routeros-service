@@ -1,0 +1,148 @@
+<%- include('partials/header') %>
+<div class="flex flex-col lg:flex-row">
+    <%- include('partials/sidebar') %>
+
+    <main class="flex-1 lg:ml-64 p-4 md:p-8 min-h-screen bg-slate-50 dark:bg-slate-900 transition-all">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+            <div>
+                <h2 class="text-2xl md:text-3xl font-extrabold text-slate-800 dark:text-white leading-tight">Interfaces</h2>
+                <p class="text-slate-500 text-sm">Physical ports, Bridges, and Virtual LANs</p>
+            </div>
+            <div class="flex items-center space-x-3">
+                <div class="bg-white dark:bg-slate-800 px-4 py-2 rounded-xl border dark:border-slate-700 shadow-sm text-[10px] font-bold uppercase tracking-wider">
+                    Total: <%= interfaces.length %> Items
+                </div>
+                <button onclick="location.reload()" class="p-2.5 bg-blue-600 text-white rounded-xl shadow-lg shadow-blue-500/30 hover:bg-blue-700 transition">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm whitespace-nowrap">
+                    <thead class="bg-slate-50/50 dark:bg-slate-900/50 text-slate-400 uppercase text-[9px] tracking-[0.2em]">
+                        <tr>
+                            <th class="p-4">Name & Flags</th>
+                            <th class="p-4">Type</th>
+                            <th class="p-4 text-right">Traffic (RX/TX)</th>
+                            <th class="p-4 text-center">Status</th>
+                            <th class="p-4 text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 dark:divide-slate-700">
+                        <% interfaces.forEach((iface, index) => { %>
+                        <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-700/30 transition-colors">
+                            <td class="p-4">
+                                <div class="flex items-center">
+                                    <div class="relative mr-4">
+                                        <div class="w-11 h-11 rounded-2xl <%= iface.disabled === 'false' ? 'bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400' : 'bg-slate-100 text-slate-400 dark:bg-slate-800' %> flex items-center justify-center border-2 border-transparent">
+                                            <i class="fas fa-ethernet text-lg"></i>
+                                        </div>
+                                        <% if(iface.running === 'true') { %>
+                                            <span class="absolute -top-1 -right-1 flex h-3.5 w-3.5">
+                                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                                                <span class="relative inline-flex rounded-full h-3.5 w-3.5 bg-green-500 border-2 border-white dark:border-slate-800"></span>
+                                            </span>
+                                        <% } %>
+                                    </div>
+                                    
+                                    <div>
+                                        <div class="flex items-center gap-2">
+                                            <span class="font-bold text-slate-700 dark:text-blue-300 tracking-tight text-base"><%= iface.name %></span>
+                                            <div class="flex gap-0.5">
+                                                <% if(iface.running === 'true') { %>
+                                                    <span class="flex items-center justify-center w-4 h-4 text-[10px] font-black bg-green-500 text-white rounded shadow-sm" title="Running">R</span>
+                                                <% } %>
+                                                <% if(iface.disabled === 'true') { %>
+                                                    <span class="flex items-center justify-center w-4 h-4 text-[10px] font-black bg-red-500 text-white rounded shadow-sm" title="Disabled">X</span>
+                                                <% } %>
+                                                <% if(iface.dynamic === 'true') { %>
+                                                    <span class="flex items-center justify-center w-4 h-4 text-[10px] font-black bg-slate-500 text-white rounded shadow-sm" title="Dynamic">D</span>
+                                                <% } %>
+                                            </div>
+                                        </div>
+                                        <span class="text-[10px] text-slate-400 font-mono tracking-tighter"><%= iface['mac-address'] || '00:00:00:00:00:00' %></span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="p-4">
+                                <span class="text-[10px] font-extrabold px-2.5 py-1 bg-slate-100 dark:bg-slate-900 rounded-lg text-slate-500 dark:text-slate-400 uppercase border dark:border-slate-700">
+                                    <%= iface.type %>
+                                </span>
+                            </td>
+                            <td class="p-4 text-right font-mono text-[11px] leading-relaxed">
+                                <div class="text-emerald-500 font-bold" id="rx-<%= index %>">
+                                    <i class="fas fa-caret-down mr-1"></i>0 bps
+                                </div>
+                                <div class="text-blue-500 font-bold" id="tx-<%= index %>">
+                                    <i class="fas fa-caret-up mr-1"></i>0 bps
+                                </div>
+                            </td>
+                            <td class="p-4 text-center">
+                                <span id="status-<%= index %>" class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-tighter <%= iface.disabled === 'false' ? 'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400' : 'bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400' %>">
+                                    <%= iface.disabled === 'false' ? 'Enabled' : 'Disabled' %>
+                                </span>
+                            </td>
+                            <td class="p-4 text-center">
+                                <button onclick="toggleInterface('<%= iface.name %>', <%= iface.disabled === 'true' %>)" 
+                                    class="w-10 h-10 rounded-xl transition-all flex items-center justify-center mx-auto <%= iface.disabled === 'false' ? 'text-red-500 bg-red-50 hover:bg-red-500 hover:text-white dark:bg-red-900/20 dark:hover:bg-red-600' : 'text-green-500 bg-green-50 hover:bg-green-500 hover:text-white dark:bg-green-900/20 dark:hover:bg-green-600' %>">
+                                    <i class="fas <%= iface.disabled === 'false' ? 'fa-power-off' : 'fa-play' %>"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    async function toggleInterface(name, shouldEnable) {
+        const actionText = shouldEnable ? 'Enable' : 'Disable';
+        const routerId = window.location.pathname.split('/')[2];
+
+        const result = await Swal.fire({
+            title: 'Confirm Action',
+            text: `Do you want to ${actionText} interface ${name}?`,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: shouldEnable ? '#10b981' : '#ef4444',
+            cancelButtonColor: '#64748b',
+            confirmButtonText: `Yes, ${actionText} it!`,
+            background: document.documentElement.classList.contains('dark') ? '#1e293b' : '#fff',
+            color: document.documentElement.classList.contains('dark') ? '#fff' : '#000'
+        });
+
+        if (result.isConfirmed) {
+            try {
+                const response = await fetch('/api/router/interface/status', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id: routerId, name: name, active: shouldEnable })
+                });
+                const resData = await response.json();
+                if(resData.status === 'success') {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: `Interface ${name} has been ${actionText}d.`,
+                        icon: 'success',
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+                    setTimeout(() => location.reload(), 1500);
+                } else {
+                    Swal.fire('Error', resData.message, 'error');
+                }
+            } catch (err) {
+                Swal.fire('Error', 'Failed to connect to server', 'error');
+            }
+        }
+    }
+</script>
+<%- include('partials/footer') %>

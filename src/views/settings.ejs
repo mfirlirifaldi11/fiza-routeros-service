@@ -1,0 +1,107 @@
+<%- include('partials/header') %>
+<div class="flex flex-col lg:flex-row">
+    <%- include('partials/sidebar') %>
+
+    <main class="flex-1 lg:ml-64 p-4 md:p-8 min-h-screen bg-slate-50 dark:bg-slate-900 transition-all">
+        
+        <div class="mb-8">
+            <h2 class="text-2xl md:text-3xl font-extrabold text-slate-800 dark:text-white leading-tight">App Settings</h2>
+            <p class="text-slate-500 text-sm">Konfigurasi hak akses, manajemen user aplikasi, dan pengaturan margin bisnis</p>
+        </div>
+
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+            
+            <div class="xl:col-span-2 space-y-8">
+                <div class="bg-white dark:bg-slate-800 rounded-[2.5rem] border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
+                    <div class="p-6 border-b dark:border-slate-700 flex justify-between items-center">
+                        <h3 class="font-bold text-slate-800 dark:text-white flex items-center">
+                            <i class="fas fa-users-cog mr-3 text-purple-500"></i> Manajemen User & Role
+                        </h3>
+                        <button class="bg-purple-600 hover:bg-purple-700 text-white text-[10px] font-black px-4 py-2 rounded-xl transition">
+                            TAMBAH USER
+                        </button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm whitespace-nowrap">
+                            <thead class="bg-slate-50/50 dark:bg-slate-900/50 text-slate-400 uppercase text-[10px] tracking-widest">
+                                <tr>
+                                    <th class="p-5">User</th>
+                                    <th class="p-5">Role</th>
+                                    <th class="p-5">Status</th>
+                                    <th class="p-5 text-center">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 dark:divide-slate-700">
+                                <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-700/30 transition-colors">
+                                    <td class="p-5">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-8 h-8 rounded-lg bg-purple-100 dark:bg-purple-900/30 text-purple-600 flex items-center justify-center font-bold text-xs">AD</div>
+                                            <div>
+                                                <p class="font-bold text-slate-700 dark:text-slate-200">Admin_Fiza</p>
+                                                <p class="text-[10px] text-slate-400">admin@fiza.core</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="p-5">
+                                        <span class="px-3 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 rounded-full text-[10px] font-black uppercase">Superuser</span>
+                                    </td>
+                                    <td class="p-5">
+                                        <div class="flex items-center text-emerald-500 text-[10px] font-bold uppercase">
+                                            <span class="w-2 h-2 bg-emerald-500 rounded-full mr-2 animate-pulse"></span> Aktif
+                                        </div>
+                                    </td>
+                                    <td class="p-5 text-center">
+                                        <button class="text-slate-400 hover:text-purple-500 p-2"><i class="fas fa-edit"></i></button>
+                                        <button class="text-slate-400 hover:text-red-500 p-2"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-8">
+                <div class="bg-white dark:bg-slate-800 rounded-[2.5rem] border border-slate-200 dark:border-slate-700 p-6 shadow-sm">
+                    <h3 class="font-bold text-slate-800 dark:text-white mb-6 flex items-center">
+                        <i class="fas fa-tags mr-3 text-orange-500"></i> Profit Margin
+                    </h3>
+                    
+                    <div class="space-y-6">
+                        <div>
+                            <label class="block text-[10px] font-black text-slate-400 uppercase mb-3 tracking-widest">Global Markup Hotspot (%)</label>
+                            <div class="flex items-center gap-4">
+                                <input type="number" value="10" class="w-full bg-slate-50 dark:bg-slate-900 border-none rounded-2xl p-4 text-sm font-bold dark:text-white outline-none focus:ring-2 focus:ring-purple-500">
+                                <span class="text-slate-500 font-bold">%</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-[10px] font-black text-slate-400 uppercase mb-3 tracking-widest">Biaya Admin PPPoE</label>
+                            <div class="relative">
+                                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-xs">Rp</span>
+                                <input type="number" value="5000" class="w-full bg-slate-50 dark:bg-slate-900 border-none rounded-2xl p-4 pl-10 text-sm font-bold dark:text-white outline-none focus:ring-2 focus:ring-purple-500">
+                            </div>
+                        </div>
+
+                        <button class="w-full py-4 bg-purple-600 hover:bg-purple-700 text-white font-black rounded-2xl shadow-lg shadow-purple-500/30 transition-all active:scale-95 text-xs tracking-widest">
+                            SIMPAN PERUBAHAN
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-gradient-to-br from-purple-600 to-indigo-700 p-6 rounded-[2.5rem] text-white shadow-xl shadow-purple-500/20">
+                    <h4 class="font-black italic text-lg mb-2">FIZA CORE v1.2</h4>
+                    <p class="text-[10px] opacity-80 leading-relaxed mb-4">Pastikan Anda menjaga kerahasiaan password dan melakukan backup database secara berkala untuk menjaga integritas data billing.</p>
+                    <div class="flex gap-2">
+                        <span class="bg-white/20 px-2 py-1 rounded text-[9px] font-bold uppercase">Stable Build</span>
+                        <span class="bg-white/20 px-2 py-1 rounded text-[9px] font-bold uppercase">NodeJS 20+</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+</div>
+
+<%- include('partials/footer') %>
