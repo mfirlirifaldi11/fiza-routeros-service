@@ -1,0 +1,87 @@
+============================================================
+📝 PROJECT SUMMARY: FIZA ROUTEROS ORCHESTRATOR
+
+Status Terakhir: Refactoring Modular Selesai & Implementasi UI Dashboard (v1.2.0)
+
+STRUKTUR FOLDER (FINAL STATE)
+
+Project menggunakan pendekatan OOP untuk logic MikroTik dan
+struktur MVC (Model-View-Controller) untuk antarmuka pengguna:
+
+📁 src/services/mikrotik/ (Core Logic)
+
+BaseService.js      : Induk koneksi API (Handle login & session).
+
+InterfaceService.js : Manajemen Port, Bridge, & VLAN.
+
+IpService.js        : Manajemen IP Address, DHCP, & DNS.
+
+RouteService.js     : Manajemen Gateway & Recursive Failover.
+
+FirewallService.js  : Manajemen NAT (Masquerade) & Filter Rules.
+
+SystemService.js    : Identity, NTP Sync, & Resource Monitor.
+
+📂 STRUKTUR FOLDER (UPDATED UI & AUTH)
+
+src/routes/authRoutes.js  : Handle Login/Logout & Enkripsi BCrypt.
+
+src/views/billing.ejs     : Dashboard finansial (Hotspot & PPPoE).
+
+src/views/settings.ejs    : Konfigurasi bisnis, Role, dan Markup harga.
+
+src/views/network.ejs     : Pusat komando Infrastruktur (MikroTik & OLT).
+
+🛡️ SISTEM AUTENTIKASI
+
+Session-Based: Menggunakan express-session untuk menjaga akses.
+
+Middleware Protect: Seluruh route dashboard terkunci kecuali user sudah login.
+
+Global Locals: Data user (name, role) tersedia otomatis di seluruh komponen UI.
+
+🎨 UI/UX STATE (TRIPLE-CONTEXT SIDEBAR)
+
+Sidebar bersifat Context-Aware (berubah otomatis sesuai halaman):
+
+🔵 Network Mode (Blue): Fokus pada RouterOS (Interfaces, IP, Hotspot, PPPoE)
+dan Infrastruktur OLT (ONU, ODC, ODP).
+🟢 Billing Mode (Emerald): Fokus pada Pendapatan, Data Pelanggan,
+dan Laporan Transaksi.
+🟣 Settings Mode (Purple): Fokus pada Role Akses, Setting Harga Paket,
+dan Margin Keuntungan.
+
+📡 ENDPOINT API & FITUR READY
+
+MONITORING: /:id/resource, /:id/interfaces.
+
+KONFIGURASI: /system/init, /ip-address/add, /firewall/masquerade.
+
+KONTROL: /interface/status, /interface/rename, Reboot via API.
+
+📜 CHANGELOG (v1.2.0)
+
+ADD: Sistem Login & Logout dengan hashing bcrypt.
+
+ADD: Halaman Billing Dashboard dengan Dummy Data transaksi.
+
+ADD: Halaman Settings Dashboard untuk manajemen bisnis.
+
+ADD: Halaman Network Dashboard (Pemisahan menu MikroTik dan OLT).
+
+ADD: Fitur Reboot Router via API di Sidebar.
+
+FIX: Perhitungan Traffic Rate (Bps) yang lebih akurat.
+
+FIX: Perbaikan ReferenceError pada variabel global router.
+
+🚀 AGENDA BERIKUTNYA (NEXT STEPS)
+
+[ ] Hotspot Engine  : Voucher Generator & integrasi harga dari Settings.
+[ ] PPPoE Manager   : CRUD Secret & isolasi isolir otomatis.
+[ ] OLT Module      : Pemantauan status ONU/ONT dan alarm LOS.
+[ ] Real Data       : Migrasi dummy data ke query transaksi database.
+
+DIARSIPKAN OLEH : GEMINI AI (FIZA COLLABORATOR)
+VERSI           : 1.2.0-STABLE
+TANGGAL         : 23 FEBRUARI 2026
