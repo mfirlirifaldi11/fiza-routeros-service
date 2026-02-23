@@ -1,0 +1,65 @@
+
+📝 PROJECT SUMMARY: FIZA ROUTEROS ORCHESTRATOR
+
+Status Terakhir: Refactoring Arsitektur Modular (OOP) Selesai
+
+STRUKTUR FOLDER (FINAL STATE)
+
+Project telah menggunakan pendekatan Object-Oriented Programming
+dengan memisahkan fungsi ke dalam service spesifik:
+
+📁 src/services/mikrotik/
+
+BaseService.js      : Induk koneksi API (Handle login & session).
+
+InterfaceService.js : Manajemen Port, Bridge, & VLAN.
+
+IpService.js        : Manajemen IP Address, DHCP, & DNS.
+
+RouteService.js     : Manajemen Gateway & Recursive Failover.
+
+FirewallService.js  : Manajemen NAT (Masquerade) & Filter Rules.
+
+SystemService.js    : Identity, NTP Sync, & Resource Monitor.
+
+ENDPOINT API YANG SUDAH READY (Route: /api/router)
+
+📡 MONITORING (GET):
+
+/:id/resource   : Monitoring CPU, RAM, Uptime, & OS.
+
+/:id/interfaces : Monitoring kondisi port fisik/virtual.
+
+🛠️ KONFIGURASI (POST):
+
+/system/init        : Otomatisasi nama router & sinkronisasi NTP.
+
+/ip-address/add     : Menambah IP ke interface fisik/virtual.
+
+/firewall/masquerade : Aktivasi internet sharing (NAT).
+
+/interface/status   : Aktivasi/Deaktivasi port.
+
+/interface/rename   : Mengubah nama port/label.
+
+KONFIGURASI LINGKUNGAN (ENVIRONMENT)
+
+Database  : MySQL MAMP (Port 8889).
+
+Koneksi   : node-routeros via VPN IP (Data diambil dari DB).
+
+Versi     : 1.0.0 (Modular Refactor).
+
+Git State : Semua perubahan sudah dipush ke branch main.
+
+AGENDA BERIKUTNYA (NEXT STEPS)
+
+Rencana pengembangan selanjutnya mencakup:
+
+[ ] Modul Hotspot   : Manajemen User, Profile, & Voucher.
+[ ] Modul Queues    : Limitasi bandwidth (Simple Queue).
+[ ] Logika Automasi : Fungsi "Satu Klik Beres" (Provisioning)
+yang menggabungkan lintas modul.
+
+DIARSIPKAN OLEH: FIZA DEV TEAM
+TANGGAL        : 23 FEBRUARI 2026
