@@ -1,0 +1,149 @@
+<div class="lg:hidden flex items-center justify-between bg-white dark:bg-slate-800 p-4 border-b dark:border-slate-700 sticky top-0 z-50">
+    <div class="flex items-center space-x-2">
+        <div class="bg-blue-600 p-1.5 rounded-lg"><i class="fas fa-network-wired text-white text-sm"></i></div>
+        <h1 class="font-bold text-slate-800 dark:text-white">FIZA CORE</h1>
+    </div>
+    <button onclick="toggleSidebar()" class="p-2 text-slate-600 dark:text-slate-300">
+        <i class="fas fa-bars text-xl"></i>
+    </button>
+</div>
+
+<div id="sidebar-overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black/50 z-30 hidden lg:hidden"></div>
+
+<aside id="sidebar" class="fixed inset-y-0 left-0 z-40 w-64 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 transition-transform duration-300 -translate-x-full lg:translate-x-0 flex flex-col">
+    
+    <div class="p-6 flex items-center justify-between border-b dark:border-slate-700/50">
+        <div class="flex items-center">
+            <div class="bg-blue-600 p-2 rounded-xl shadow-lg shadow-blue-500/30 mr-3">
+                <i class="fas fa-microchip text-white"></i>
+            </div>
+            <div>
+                <h1 class="text-sm font-bold dark:text-white leading-tight uppercase tracking-tight">FIZA CORE</h1>
+                <p class="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Admin Panel</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex-1 overflow-y-auto custom-scroll p-4 space-y-6">
+        
+        <div>
+            <label class="text-[10px] font-bold text-slate-400 uppercase px-2 mb-2 block tracking-widest">Active Router</label>
+            <select onchange="window.location.href='/dashboard/' + this.value" class="w-full bg-slate-100 dark:bg-slate-900 border-none text-xs rounded-xl p-3 focus:ring-2 focus:ring-blue-500 cursor-pointer dark:text-slate-300 outline-none">
+                <% allRouters.forEach(r => { %>
+                    <option value="<%= r.id %>" <%= r.id == router.id ? 'selected' : '' %>><%= r.alias_name %></option>
+                <% }) %>
+            </select>
+        </div>
+
+        <nav class="space-y-1">
+            <label class="text-[10px] font-bold text-slate-400 uppercase px-2 mb-2 block tracking-widest text-opacity-70">Main Menu</label>
+            
+            <a href="/dashboard/<%= router.id %>" class="flex items-center p-3 text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 rounded-xl font-semibold border border-blue-100 dark:border-blue-900/30">
+                <i class="fas fa-th-large w-8 text-lg"></i><span>Dashboard</span>
+            </a>
+            
+            <a href="/dashboard/<%= router.id %>/interfaces" class="flex items-center p-3 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700/50 rounded-xl transition group">
+                <i class="fas fa-ethernet w-8 text-lg group-hover:text-blue-500"></i><span>Interfaces</span>
+            </a>
+
+            <div class="space-y-1">
+                <button onclick="toggleSubMenu('menu-ip')" class="w-full flex items-center justify-between p-3 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700/50 rounded-xl transition group">
+                    <div class="flex items-center">
+                        <i class="fas fa-project-diagram w-8 text-lg group-hover:text-emerald-500"></i><span>IP Settings</span>
+                    </div>
+                    <i id="arrow-menu-ip" class="fas fa-chevron-right text-[10px] transition-transform"></i>
+                </button>
+                <div id="menu-ip" class="hidden pl-8 space-y-1">
+                    <a href="#" class="block p-2 text-xs text-slate-500 dark:text-slate-400 hover:text-blue-500">Addresses</a>
+                    <a href="#" class="block p-2 text-xs text-slate-500 dark:text-slate-400 hover:text-blue-500">DNS</a>
+                    <a href="#" class="block p-2 text-xs text-slate-500 dark:text-slate-400 hover:text-blue-500">Routes</a>
+                </div>
+            </div>
+        </nav>
+
+        <nav class="space-y-1">
+            <label class="text-[10px] font-bold text-slate-400 uppercase px-2 mb-2 block tracking-widest text-opacity-70">Client Services</label>
+            
+            <div class="space-y-1">
+                <button onclick="toggleSubMenu('menu-hotspot')" class="w-full flex items-center justify-between p-3 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700/50 rounded-xl transition group">
+                    <div class="flex items-center">
+                        <i class="fas fa-wifi w-8 text-lg group-hover:text-orange-500"></i><span>Hotspot</span>
+                    </div>
+                    <i id="arrow-menu-hotspot" class="fas fa-chevron-right text-[10px] transition-transform"></i>
+                </button>
+                <div id="menu-hotspot" class="hidden pl-8 space-y-1">
+                    <a href="#" class="block p-2 text-xs text-slate-500 dark:text-slate-400 hover:text-blue-500">Users</a>
+                    <a href="#" class="block p-2 text-xs text-slate-500 dark:text-slate-400 hover:text-blue-500">Profiles</a>
+                    <a href="#" class="block p-2 text-xs text-slate-500 dark:text-slate-400 hover:text-blue-500">Active</a>
+                </div>
+            </div>
+
+            <div class="space-y-1">
+                <button onclick="toggleSubMenu('menu-pppoe')" class="w-full flex items-center justify-between p-3 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700/50 rounded-xl transition group">
+                    <div class="flex items-center">
+                        <i class="fas fa-user-shield w-8 text-lg group-hover:text-blue-400"></i><span>PPP (PPPoE)</span>
+                    </div>
+                    <i id="arrow-menu-pppoe" class="fas fa-chevron-right text-[10px] transition-transform"></i>
+                </button>
+                <div id="menu-pppoe" class="hidden pl-8 space-y-1">
+                    <a href="#" class="block p-2 text-xs text-slate-500 dark:text-slate-400 hover:text-blue-500">Secrets</a>
+                    <a href="#" class="block p-2 text-xs text-slate-500 dark:text-slate-400 hover:text-blue-500">Profiles</a>
+                    <a href="#" class="block p-2 text-xs text-slate-500 dark:text-slate-400 hover:text-blue-500">Active</a>
+                </div>
+            </div>
+        </nav>
+
+        <nav class="space-y-1">
+            <label class="text-[10px] font-bold text-slate-400 uppercase px-2 mb-2 block tracking-widest text-opacity-70">Security & QoS</label>
+            
+            <div class="space-y-1">
+                <button onclick="toggleSubMenu('menu-firewall')" class="w-full flex items-center justify-between p-3 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700/50 rounded-xl transition group">
+                    <div class="flex items-center">
+                        <i class="fas fa-shield-halved w-8 text-lg group-hover:text-red-500"></i><span>Firewall</span>
+                    </div>
+                    <i id="arrow-menu-firewall" class="fas fa-chevron-right text-[10px] transition-transform"></i>
+                </button>
+                <div id="menu-firewall" class="hidden pl-8 space-y-1">
+                    <a href="#" class="block p-2 text-xs text-slate-500 dark:text-slate-400 hover:text-blue-500">Filter Rules</a>
+                    <a href="#" class="block p-2 text-xs text-slate-500 dark:text-slate-400 hover:text-blue-500">NAT</a>
+                    <a href="#" class="block p-2 text-xs text-slate-500 dark:text-slate-400 hover:text-blue-500">Mangle</a>
+                </div>
+            </div>
+
+            <div class="space-y-1">
+                <button onclick="toggleSubMenu('menu-qos')" class="w-full flex items-center justify-between p-3 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700/50 rounded-xl transition group">
+                    <div class="flex items-center">
+                        <i class="fas fa-gauge-high w-8 text-lg group-hover:text-purple-500"></i><span>Bandwidth (QoS)</span>
+                    </div>
+                    <i id="arrow-menu-qos" class="fas fa-chevron-right text-[10px] transition-transform"></i>
+                </button>
+                <div id="menu-qos" class="hidden pl-8 space-y-1">
+                    <a href="#" class="block p-2 text-xs text-slate-500 dark:text-slate-400 hover:text-blue-500">Simple Queues</a>
+                    <a href="#" class="block p-2 text-xs text-slate-500 dark:text-slate-400 hover:text-blue-500">Queue Tree</a>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <div class="p-4 border-t dark:border-slate-700">
+        <button id="theme-toggle" class="flex items-center justify-center w-full p-2.5 space-x-2 bg-slate-100 dark:bg-slate-700 rounded-xl text-slate-600 dark:text-slate-300 transition hover:ring-2 hover:ring-blue-500">
+            <i id="theme-toggle-dark-icon" class="hidden fas fa-moon"></i>
+            <i id="theme-toggle-light-icon" class="hidden fas fa-sun"></i>
+            <span class="text-[10px] font-bold uppercase tracking-wider">Switch Mode</span>
+        </button>
+    </div>
+</aside>
+
+<script>
+    function toggleSidebar() {
+        document.getElementById('sidebar').classList.toggle('-translate-x-full');
+        document.getElementById('sidebar-overlay').classList.toggle('hidden');
+    }
+
+    function toggleSubMenu(id) {
+        const menu = document.getElementById(id);
+        const arrow = document.getElementById('arrow-' + id);
+        menu.classList.toggle('hidden');
+        arrow.classList.toggle('rotate-90');
+    }
+</script>

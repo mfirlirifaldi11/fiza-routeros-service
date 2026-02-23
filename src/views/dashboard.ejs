@@ -1,0 +1,101 @@
+<%- include('partials/header') %>
+<div class="flex flex-col lg:flex-row">
+    <%- include('partials/sidebar') %>
+
+    <main class="flex-1 lg:ml-64 p-4 md:p-8 min-h-screen bg-slate-50 dark:bg-slate-900 transition-all">
+        
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4">
+            <div>
+                <h2 class="text-2xl md:text-3xl font-extrabold text-slate-800 dark:text-white leading-tight">Router Overview</h2>
+                <div class="flex items-center mt-1 text-slate-500 text-xs">
+                    <span class="bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-300 px-2 py-0.5 rounded mr-2 font-bold uppercase"><%= router.alias_name %></span>
+                    <span class="font-mono"><%= router.vpn_ip %></span>
+                </div>
+            </div>
+            <div class="flex items-center space-x-2 bg-white dark:bg-slate-800 p-2 px-4 rounded-2xl border dark:border-slate-700 shadow-sm">
+                <span class="relative flex h-2 w-2">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                </span>
+                <span class="text-[10px] font-bold text-green-600 dark:text-green-400 uppercase tracking-tighter">Live Monitoring</span>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
+            <div class="bg-white dark:bg-slate-800 p-5 rounded-3xl border dark:border-slate-700 shadow-sm">
+                <p class="text-slate-400 text-[10px] uppercase font-bold tracking-widest mb-2">CPU Load</p>
+                <div id="cpu-text" class="text-2xl md:text-3xl font-black text-slate-800 dark:text-white">
+                    <%= resource['cpu-load'] %><span class="text-sm font-normal text-slate-400">%</span>
+                </div>
+                <div class="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-1.5 mt-4 overflow-hidden">
+                    <div id="cpu-bar" class="bg-blue-500 h-1.5 rounded-full transition-all duration-700" style="width: <%= resource['cpu-load'] %>%;"></div>
+                </div>
+            </div>
+
+            <div class="bg-white dark:bg-slate-800 p-5 rounded-3xl border dark:border-slate-700 shadow-sm">
+                <p class="text-slate-400 text-[10px] uppercase font-bold tracking-widest mb-2">Free RAM</p>
+                <div id="ram-text" class="text-2xl md:text-3xl font-black text-slate-800 dark:text-white">
+                    <%= (resource['free-memory']/1024/1024).toFixed(1) %><span class="text-sm font-normal text-slate-400 ml-1">MB</span>
+                </div>
+                <p class="text-[9px] text-slate-500 mt-3 font-bold uppercase tracking-tight">System Memory</p>
+            </div>
+
+            <div class="bg-white dark:bg-slate-800 p-5 rounded-3xl border dark:border-slate-700 shadow-sm font-medium">
+                <p class="text-slate-400 text-[10px] uppercase font-bold tracking-widest mb-2">Model</p>
+                <div class="text-base md:text-lg font-bold text-slate-800 dark:text-white truncate"><%= resource['board-name'] %></div>
+                <p class="text-[9px] text-slate-500 mt-3 font-bold uppercase tracking-tight text-blue-500">ROS v<%= resource['version'] %></p>
+            </div>
+
+            <div class="bg-white dark:bg-slate-800 p-5 rounded-3xl border dark:border-slate-700 shadow-sm">
+                <p class="text-slate-400 text-[10px] uppercase font-bold tracking-widest mb-2 text-orange-500">Uptime</p>
+                <div id="uptime-text" class="text-sm md:text-lg font-bold text-slate-800 dark:text-white truncate tracking-tight"><%= resource['uptime'] %></div>
+                <p class="text-[9px] text-slate-500 mt-3 font-bold uppercase tracking-tight">System Active</p>
+            </div>
+        </div>
+
+        <div class="bg-white dark:bg-slate-800 rounded-3xl border dark:border-slate-700 shadow-sm overflow-hidden">
+            <div class="p-5 border-b dark:border-slate-700 flex justify-between items-center bg-slate-50/30 dark:bg-slate-800/50">
+                <h3 class="font-bold text-sm uppercase tracking-wider text-slate-600 dark:text-slate-400">Live Traffic (Real-time)</h3>
+                <a href="/dashboard/<%= router.id %>/interfaces" class="text-[10px] font-bold text-blue-500 hover:text-blue-600 transition uppercase tracking-tighter flex items-center">
+                    Full Management <i class="fas fa-arrow-right ml-1"></i>
+                </a>
+            </div>
+            <div class="overflow-x-auto overflow-y-hidden">
+                <table class="w-full text-left text-xs whitespace-nowrap">
+<thead class="bg-slate-50/50 dark:bg-slate-900/50 text-slate-400 uppercase text-[9px] tracking-[0.2em]">
+    <tr>
+        <th class="p-4 text-left">Interface</th>
+        <th class="p-4 text-right text-emerald-500">RX (Download)</th>
+        <th class="p-4 text-right text-blue-500">TX (Upload)</th>
+        <th class="p-4 text-center">Status</th>
+    </tr>
+</thead>
+                    <tbody id="interface-list" class="divide-y dark:divide-slate-700">
+                        <% interfaces.slice(0, 5).forEach((iface, index) => { %>
+                        <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-700/30 transition-colors">
+                            <td class="p-4">
+                                <div class="flex items-center">
+                                    <div class="w-2 h-2 rounded-full <%= iface.running === 'true' ? 'bg-green-500' : 'bg-slate-300' %> mr-3"></div>
+                                    <span class="font-bold text-slate-700 dark:text-blue-300 tracking-tight"><%= iface.name %></span>
+                                </div>
+                            </td>
+                            <td class="p-4 text-right font-mono text-emerald-500 font-bold" id="rx-<%= index %>">
+                                0 bps
+                            </td>
+                            <td class="p-4 text-right font-mono text-blue-500 font-bold" id="tx-<%= index %>">
+                                0 bps
+                            </td>
+                            <td class="p-4 text-center">
+                                <span id="status-<%= index %>" class="px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-tighter <%= iface.running === 'true' ? 'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400' : 'bg-slate-100 text-slate-500 dark:bg-slate-700' %>">
+                                    <%= iface.running === 'true' ? 'Active' : 'Idle' %>
+                                </span>
+                            </td>
+                        </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>
+<%- include('partials/footer') %>
